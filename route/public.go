@@ -11,7 +11,7 @@ func NewPublicRoute(r *gin.RouterGroup) {
 	userRoute := r.Group("/users")
 	{
 		userRoute.POST("/", h.Register)
-		//userRoute.POST("/", h.Login)
+		userRoute.POST("/login", h.Login)
 		userRoute.GET("/", h.GetUsers)
 		userRoute.GET("/:id", h.GetUserByID)
 		userRoute.PUT("/:id", h.UpdateUser)

@@ -56,6 +56,7 @@ func (h *handler) GetTasks(c *gin.Context) {
 	for _, task := range tasks {
 		taskResponse = append(taskResponse, &dto.TaskResponse{
 			ID:          task.ID,
+			UserId:      task.UserId,
 			Tittle:      task.Tittle,
 			Description: task.Description,
 			Status:      task.Status,
@@ -97,6 +98,7 @@ func (h *handler) GetTaskByID(c *gin.Context) {
 
 	taskResponse = &dto.TaskResponse{
 		ID:          task.ID,
+		UserId:      task.UserId,
 		Tittle:      task.Tittle,
 		Description: task.Description,
 		Status:      task.Status,
@@ -185,8 +187,9 @@ func (h *handler) DeleteTask(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, dto.BaseResponse{
-		Code: http.StatusOK,
-		Data: "Success delete task",
+		Code:    http.StatusOK,
+		Message: "Success delete task",
+		Data:    nil,
 	})
 	return
 }

@@ -12,7 +12,7 @@ import (
 func (h *handler) Login(c *gin.Context) {
 	var userRequest *dto.UserRequest
 
-	if err := c.ShouldBindJSON(&userRequest); err != nil {
+	if err := c.ShouldBind(&userRequest); err != nil {
 		c.JSON(400, err)
 		return
 	}
@@ -157,9 +157,11 @@ func (h *handler) GetUserByID(c *gin.Context) {
 	}
 
 	userResponse = &dto.UserResponse{
-		ID:    user.ID,
-		Name:  user.Name,
-		Email: user.Email,
+		ID:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt,
+		UpdateAt:  user.UpdateAt,
 	}
 
 	c.JSON(http.StatusOK, dto.BaseResponse{
@@ -189,23 +191,22 @@ func (h *handler) UpdateUser(c *gin.Context) {
 	user.Name = userRequest.Name
 	user.Email = userRequest.Email
 
-	var userFound bool
-	//fmt.Println(user)
-	userFound, err = h.repository.UpdateUser(c, int(userId), user)
+	//var userFound bool
+	_, err = h.repository.UpdateUser(c, int(userId), user)
 
 	if err != nil {
 		c.JSON(400, err)
 		return
 	}
 
-	if !userFound {
-		c.JSON(http.StatusNotFound, dto.BaseResponse{
-			Code:    http.StatusNotFound,
-			Message: "User not found",
-			Data:    nil,
-		})
-		return
-	}
+	//if !userFound {
+	//	c.JSON(http.StatusNotFound, dto.BaseResponse{
+	//		Code:    http.StatusNotFound,
+	//		Message: "User not found",
+	//		Data:    nil,
+	//	})
+	//	return
+	//}
 
 	c.JSON(http.StatusOK, dto.BaseResponse{
 		Code:    http.StatusOK,
@@ -240,9 +241,10 @@ func (h *handler) DeleteUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusNoContent, dto.BaseResponse{
-		Code: http.StatusOK,
-		Data: "Success delete user",
+	c.JSON(http.StatusOK, dto.BaseResponse{
+		Code:    http.StatusOK,
+		Message: "Success delete user",
+		Data:    nil,
 	})
 	return
 }
